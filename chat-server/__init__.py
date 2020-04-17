@@ -4,6 +4,9 @@ from database import connector
 from model import entities
 from math import sqrt
 from typing import List
+from os import chdir
+from os.path import dirname, realpath
+
 import json
 import time
 
@@ -51,6 +54,7 @@ def esprimo(n: int) -> str:
 
 
 def main():
+    chdir(dirname(realpath(__file__)))
     app.secret_key = ".."
     app.run(port=8080, threaded=True, host=('127.0.0.1'))
 
