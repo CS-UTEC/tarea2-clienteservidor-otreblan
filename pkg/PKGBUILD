@@ -1,0 +1,39 @@
+# Maintainer: Otreblan <otreblain@gmail.com>
+
+pkgname=chat-server-git
+pkgver=r3.1fb7f91
+pkgrel=1
+pkgdesc="Chat server"
+arch=('any')
+url=""
+license=('AGPL3')
+depends=("python-flask" "python-sqlalchemy")
+makedepends=("python-setuptools")
+checkdepends=()
+optdepends=()
+provides=(${pkgname%-git})
+conflicts=(${pkgname%-git})
+_gitrepo=$(git rev-parse --show-toplevel)
+_headcommit=$(git rev-parse HEAD)
+source=("$pkgname::git+file://$_gitrepo#commit=$_headcommit")
+sha256sums=("SKIP")
+
+pkgver() {
+	cd "$srcdir/$pkgname"
+	( set -o pipefail
+	git describe --long 2>/dev/null | sed 's/^v-//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	)
+}
+
+build() {
+	cd "$pkgname"
+
+	python setup.py build
+}
+
+package() {
+	cd "$pkgname"
+
+	python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
+}
