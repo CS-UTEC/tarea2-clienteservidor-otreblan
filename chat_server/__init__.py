@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from flask import Flask,render_template, request, session, Response, redirect
-from database import connector
-from model import entities
+from .database import connector
+from .model import entities
 from math import sqrt
 from typing import List
 from os import chdir
