@@ -1,7 +1,7 @@
 # Maintainer: Otreblan <otreblain@gmail.com>
 
 pkgname=chat-server-git
-pkgver=r7.7bcdf2a
+pkgver=r8.7dad62a
 pkgrel=1
 pkgdesc="Chat server"
 arch=('any')
