@@ -68,6 +68,17 @@ def palindrome(palabra: str) -> str:
     return 'True'
 
 
+@app.route('/multiplo/<n1>/<n2>')
+def multiplo(n1: str, n2: str) -> str:
+    _n1: int = int(n1)
+    _n2: int = int(n2)
+
+    if((_n1 % _n2) == 0):
+        return 'True'
+    else:
+        return 'False'
+
+
 def main():
     app.secret_key = ".."
     app.run(port=8080, threaded=True, host=('127.0.0.1'))
