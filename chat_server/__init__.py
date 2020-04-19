@@ -61,7 +61,6 @@ def esprimo(n: int) -> str:
 
 
 def main():
-    chdir(dirname(realpath(__file__)))
     app.secret_key = ".."
     app.run(port=8080, threaded=True, host=('127.0.0.1'))
 
