@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from flask import Flask,render_template, request, session, Response, redirect
-from database import connector
-from model import entities
+
 from math import sqrt
 from typing import List
 from os import chdir
@@ -9,6 +8,14 @@ from os.path import dirname, realpath
 
 import json
 import time
+
+if __package__ is None or __package__ == '':
+    from database import connector
+    from model import entities
+else:
+    from .database import connector
+    from .model import entities
+
 
 db = connector.Manager()
 engine = db.createEngine()
