@@ -60,6 +60,25 @@ def esprimo(n: int) -> str:
     return 'True'
 
 
+@app.route('/palindrome/<palabra>')
+def palindrome(palabra: str) -> str:
+    for i in range(0, int(len(palabra)/2)):
+        if(palabra[i] != palabra[len(palabra)-1-i]):
+            return 'False'
+    return 'True'
+
+
+@app.route('/multiplo/<n1>/<n2>')
+def multiplo(n1: str, n2: str) -> str:
+    _n1: int = int(n1)
+    _n2: int = int(n2)
+
+    if((_n1 % _n2) == 0):
+        return 'True'
+    else:
+        return 'False'
+
+
 def main():
     app.secret_key = ".."
     app.run(port=8080, threaded=True, host=('127.0.0.1'))
