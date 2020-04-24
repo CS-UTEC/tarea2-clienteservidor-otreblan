@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from flask import Flask,render_template, request, session, Response, redirect
 
+from typing import List
+
 import sympy
 import json
 import time
@@ -65,13 +67,24 @@ def create_user():
         username="otreblan",
     )
 
-    print(user)
-
     db_session = db.getSession(engine)
     db_session.add(user)
     db_session.commit()
 
     return "User created"
+
+
+@app.route('/read_users')
+def read_users():
+    db_session = db.getSession(engine)
+    resp = db_session.query(entities.User)
+    users: List[entities.User] = resp[:]
+    print(len(users))
+
+    for i in users:
+        print(i.name)
+
+    return '.'
 
 
 def main():
