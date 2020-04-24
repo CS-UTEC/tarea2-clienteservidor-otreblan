@@ -20,6 +20,7 @@ setuptools.setup(
     install_requires=[
         "Flask",
         "SQLAlchemy",
+        "sympy",
     ],
     entry_points={
         "console_scripts": [

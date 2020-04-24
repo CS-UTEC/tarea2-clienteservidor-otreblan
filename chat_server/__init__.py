@@ -6,6 +6,7 @@ from typing import List
 from os import chdir
 from os.path import dirname, realpath
 
+import sympy
 import json
 import time
 
@@ -37,27 +38,8 @@ def espar(n: int) -> str:
 
 
 @app.route('/esprimo/<n>')
-def esprimo(n: int) -> str:
-    _n: int = int(n)
-    if(_n == 2):
-        return 'True'
-
-    primeList: List[int] = [2]
-    for i in range(3, int(sqrt(_n)+2), 2):
-        isPrime: bool = True
-        for j in primeList:
-            if ((i % j) == 0):
-                isPrime = False
-                break
-
-        if (isPrime):
-            primeList.append(i)
-
-    for i in primeList:
-        if((_n % i) == 0):
-            return 'False'
-
-    return 'True'
+def esprimo(n: str) -> str:
+    return 'True' if sympy.isprime(int(n)) else 'False'
 
 
 @app.route('/palindrome/<palabra>')

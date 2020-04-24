@@ -1,13 +1,13 @@
 # Maintainer: Otreblan <otreblain@gmail.com>
 
 pkgname=chat-server-git
-pkgver=r8.7dad62a
+pkgver=r13.1736dae
 pkgrel=1
 pkgdesc="Chat server"
 arch=('any')
 url=""
 license=('AGPL3')
-depends=("python-flask" "python-sqlalchemy")
+depends=("python-flask" "python-sqlalchemy" "python-sympy")
 makedepends=("python-setuptools")
 checkdepends=()
 optdepends=()
