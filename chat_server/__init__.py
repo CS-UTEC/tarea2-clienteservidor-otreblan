@@ -58,13 +58,13 @@ def multiplo(n1: str, n2: str) -> str:
         return 'False'
 
 
-@app.route('/create_user')
-def create_user():
+@app.route('/create_user/<_name>/<_fullname>/<_password>/<_username>')
+def create_user(_name: str, _fullname: str, _password: str, _username: str):
     user = entities.User(
-        name='Alberto',
-        fullname="Alberto Oporto Ames",
-        password="unodostres",
-        username="otreblan",
+        name=_name,
+        fullname=_fullname,
+        password=_password,
+        username=_username,
     )
 
     db_session = db.getSession(engine)
@@ -79,12 +79,29 @@ def read_users():
     db_session = db.getSession(engine)
     resp = db_session.query(entities.User)
     users: List[entities.User] = resp[:]
-    print(len(users))
+
+    resu: str = ('<table>'
+
+                 '<tr>'
+                 '<th>name</th>'
+                 '<th>fullname</th>'
+                 '<th>password</th>'
+                 '<th>username</th>'
+                 '</tr>')
 
     for i in users:
-        print(i.name)
+        resu += ('<tr>'
 
-    return '.'
+                 '<td>' + i.name + '</td>'
+                 '<td>' + i.fullname + '</td>'
+                 '<td>' + i.password + '</td>'
+                 '<td>' + i.username + '</td>'
+
+                 '</tr>')
+
+    resu += '</table>'
+
+    return resu
 
 
 def main():
