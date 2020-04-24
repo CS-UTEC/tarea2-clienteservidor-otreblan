@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 from flask import Flask,render_template, request, session, Response, redirect
 
-from math import sqrt
-from typing import List
-from os import chdir
-from os.path import dirname, realpath
-
 import sympy
 import json
 import time
@@ -18,7 +13,7 @@ else:
     from .model import entities
 
 
-db = connector.Manager()
+db: connector.Manager = connector.Manager()
 engine = db.createEngine()
 
 app = Flask(__name__)
@@ -59,6 +54,24 @@ def multiplo(n1: str, n2: str) -> str:
         return 'True'
     else:
         return 'False'
+
+
+@app.route('/create_user')
+def create_user():
+    user = entities.User(
+        name='Alberto',
+        fullname="Alberto Oporto Ames",
+        password="unodostres",
+        username="otreblan",
+    )
+
+    print(user)
+
+    db_session = db.getSession(engine)
+    db_session.add(user)
+    db_session.commit()
+
+    return "User created"
 
 
 def main():
