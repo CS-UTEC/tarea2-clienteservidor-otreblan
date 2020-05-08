@@ -25,83 +25,76 @@ app = Flask(__name__)
 def static_content(content):
     return render_template(content)
 
+# CROUT users
 
-@app.route('/espar/<n>')
-def espar(n: int) -> str:
-    if ((int(n) % 2) == 0):
-        return 'True'
-    else:
-        return 'False'
-
-
-@app.route('/esprimo/<n>')
-def esprimo(n: str) -> str:
-    return 'True' if sympy.isprime(int(n)) else 'False'
-
-
-@app.route('/palindrome/<palabra>')
-def palindrome(palabra: str) -> str:
-    for i in range(0, int(len(palabra)/2)):
-        if(palabra[i] != palabra[len(palabra)-1-i]):
-            return 'False'
-    return 'True'
-
-
-@app.route('/multiplo/<n1>/<n2>')
-def multiplo(n1: str, n2: str) -> str:
-    _n1: int = int(n1)
-    _n2: int = int(n2)
-
-    if((_n1 % _n2) == 0):
-        return 'True'
-    else:
-        return 'False'
-
-
-@app.route('/create_user/<_name>/<_fullname>/<_password>/<_username>')
-def create_user(_name: str, _fullname: str, _password: str, _username: str):
+# 1. Create
+@app.route('/users', methods=['POST'])
+def create_user() -> str:
+    body = json.loads(request.data)
     user = entities.User(
-        name=_name,
-        fullname=_fullname,
-        password=_password,
-        username=_username,
+            username=body['username'],
+            name=body['name'],
+            fullname=body['fullname'],
+            password=body['password'],
     )
 
+    # Send to db
     db_session = db.getSession(engine)
     db_session.add(user)
     db_session.commit()
 
-    return "User created"
+    # Response
+    message = {'msg': "User created"}
+    json_message = json.dumps(message, cls=connector.AlchemyEncoder)
+    res = Response(json_message, status=201, mimetype="application/json")
+    return res
 
 
-@app.route('/read_users')
-def read_users():
+@app.route('/users', methods=['GET'])
+def read_user() -> str:
     db_session = db.getSession(engine)
-    resp = db_session.query(entities.User)
-    users: List[entities.User] = resp[:]
+    response = db_session.query(entities.User)
+    users = response[:]
 
-    resu: str = ('<table>'
+    json_message = json.dumps(users, cls=connector.AlchemyEncoder)
 
-                 '<tr>'
-                 '<th>name</th>'
-                 '<th>fullname</th>'
-                 '<th>password</th>'
-                 '<th>username</th>'
-                 '</tr>')
+    return Response(json_message, status=200, mimetype="application/json")
 
-    for i in users:
-        resu += ('<tr>'
 
-                 '<td>' + i.name + '</td>'
-                 '<td>' + i.fullname + '</td>'
-                 '<td>' + i.password + '</td>'
-                 '<td>' + i.username + '</td>'
+@app.route('/users/<id>', methods=['PUT'])
+def update_user(id: str) -> str:
+    db_session = db.getSession(engine)
+    user = db_session.query(entities.User).\
+        filter(entities.User.id == id).first()
 
-                 '</tr>')
+    body = json.loads(request.data)
+    for key in body.keys():
+        setattr(user, key, body[key])
 
-    resu += '</table>'
+    db_session.add(user)
+    db_session.commit()
 
-    return resu
+    # Response
+    message = {'msg': "User updated"}
+    json_message = json.dumps(message, cls=connector.AlchemyEncoder)
+    res = Response(json_message, status=201, mimetype="application/json")
+    return res
+
+
+@app.route('/users/<id>', methods=['DELETE'])
+def delete_user(id: str) -> str:
+    db_session = db.getSession(engine)
+    user = db_session.query(entities.User).\
+        filter(entities.User.id == id).first()
+
+    db_session.delete(user)
+    db_session.commit()
+
+    # Response
+    message = {'msg': "User deleted"}
+    json_message = json.dumps(message, cls=connector.AlchemyEncoder)
+    res = Response(json_message, status=201, mimetype="application/json")
+    return res
 
 
 def main():
